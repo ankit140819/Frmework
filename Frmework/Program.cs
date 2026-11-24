@@ -1,0 +1,73 @@
+using Frmework.Data;                     
+using Microsoft.EntityFrameworkCore;     
+using Microsoft.AspNetCore.SignalR;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+// Enable Razor Pages (admin area pages)
+builder.Services.AddRazorPages();
+
+// Required backing store for session state (must be registered before AddSession)
+builder.Services.AddDistributedMemoryCache();
+
+// Register session with sensible defaults
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    // Make cookie usable on localhost and avoid strict same-site blocking
+    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
+    options.Cookie.Path = "/";
+});
+
+// SignalR services for real-time features
+builder.Services.AddSignalR();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
+// Register repository for online sales (will use connection string if available)
+builder.Services.AddScoped<Frmework.Repositories.IOnlineSalesRepository, Frmework.Repositories.OnlineSalesRepository>();
+builder.Services.AddScoped<Frmework.Services.OnlineSalesService>();
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+// Serve files from wwwroot
+app.UseStaticFiles();
+
+app.UseRouting();
+
+// Enable session middleware so HttpContext.Session is available in views and controllers
+app.UseSession();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Map SignalR hubs after routing
+app.MapHub<Frmework.Hubs.ChatHub>("/chathub");
+
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    // Log the startup exception so you can see the real error when app.Run fails under the debugger
+    app.Logger.LogCritical(ex, "Host terminated unexpectedly");
+    throw;
+}

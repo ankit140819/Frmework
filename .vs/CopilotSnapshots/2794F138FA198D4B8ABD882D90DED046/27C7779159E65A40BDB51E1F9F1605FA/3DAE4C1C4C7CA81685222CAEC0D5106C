@@ -1,0 +1,743 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Premium Skincare</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Frmework.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --gold-color: #d4af37;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+            --accent-pink: #ff6b9d;
+            --accent-cyan: #00d4ff;
+            --accent-orange: #ff9500;
+        }
+
+        /* ============ HEADER STYLING ============ */
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2), 0 0 20px rgba(255, 107, 157, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink), var(--accent-orange)) 1;
+            animation: headerGlow 3s ease-in-out infinite;
+        }
+
+        a{text-decoration:none;}
+        li{list-style-type:none;}
+
+        @@keyframes headerGlow {
+            0%, 100% {
+                box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2), 0 0 20px rgba(255, 107, 157, 0.1);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(0, 212, 255, 0.4), 0 0 30px rgba(255, 107, 157, 0.2);
+            }
+        }
+
+        .navbar {
+            background: transparent !important;
+            padding: 10px 0 !important;
+        }
+
+        /* ============ LOGO STYLING ============ */
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white !important;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .logo-container {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 157, 0.2));
+            border-radius: 12px;
+            padding: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 10px rgba(255, 107, 157, 0.1);
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink)) 1;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5)) drop-shadow(0 0 4px rgba(255, 107, 157, 0.3));
+        }
+
+        .navbar-brand:hover .logo-container {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.4), rgba(255, 107, 157, 0.4));
+            transform: scale(1.12) rotate(-5deg);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), inset 0 0 15px rgba(255, 107, 157, 0.3), 0 0 20px rgba(255, 149, 0, 0.2);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-text .main {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            line-height: 1;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.2));
+        }
+
+        .brand-text .tagline {
+            font-size: 0.65rem;
+            font-weight: 500;
+            opacity: 0.85;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-brand:hover {
+            filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.4)) drop-shadow(0 0 10px rgba(255, 107, 157, 0.2));
+        }
+
+        .navbar-brand:hover .brand-text .main {
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.5), 0 0 20px rgba(255, 107, 157, 0.3);
+            filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.4)) drop-shadow(0 0 8px rgba(255, 107, 157, 0.2));
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* Navigation Links */
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            font-size: 1rem;
+            margin: 0 8px;
+            padding: 8px 12px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            background: rgba(0, 212, 255, 0.15);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2), inset 0 0 10px rgba(255, 107, 157, 0.05);
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 60%;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
+        }
+
+        .navbar-nav .nav-link.active {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 157, 0.15));
+            color: white !important;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3), inset 0 0 10px rgba(255, 107, 157, 0.1);
+        }
+
+        /* Search Bar */
+        .navbar-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-search .form-control {
+            background: rgba(0, 212, 255, 0.08) !important;
+            border: 2px solid rgba(0, 212, 255, 0.3) !important;
+            color: white !important;
+            border-radius: 25px;
+            padding: 10px 20px !important;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-search .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .navbar-search .form-control:focus {
+            background: rgba(0, 212, 255, 0.15) !important;
+            border-color: var(--accent-cyan) !important;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 10px rgba(255, 107, 157, 0.05);
+            color: white !important;
+        }
+
+        .navbar-search .btn-search {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink)) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .navbar-search .btn-search:hover {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange)) !important;
+            color: white !important;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+        }
+
+        /* Cart Button */
+        .cart-button {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 157, 0.15)) !important;
+            color: white;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .cart-button:hover {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink)) !important;
+            color: white !important;
+            border-color: var(--accent-cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4), 0 0 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .cart-button .badge {
+            background: linear-gradient(135deg, #ff4444, #ff6b6b) !important;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+        }
+
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+            }
+            50% {
+                transform: scale(1.2);
+                box-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+            }
+        }
+
+        /* User Menu Dropdown */
+        .dropdown-menu {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+            border: 2px solid rgba(0, 212, 255, 0.3) !important;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3), 0 0 20px rgba(255, 107, 157, 0.15) !important;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .dropdown-menu .dropdown-item {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            border-radius: 8px;
+            margin: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 157, 0.2));
+            padding-left: 25px;
+            color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        .dropdown-menu .dropdown-divider {
+            border-color: rgba(0, 212, 255, 0.2);
+        }
+
+        @@keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Top Announcement Bar */
+        .announcement-bar {
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-pink) 50%, var(--accent-orange) 100%);
+            color: white;
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3), 0 0 15px rgba(255, 107, 157, 0.2);
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        @@keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cart Modal Enhancements */
+        .modal-content {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: var(--light-bg);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            border: none;
+            padding: 20px;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-body table {
+            font-size: 0.95rem;
+        }
+
+        .modal-body table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .modal-body table thead th {
+            border: none;
+            font-weight: 700;
+            padding: 15px;
+        }
+
+        .modal-body table tbody tr {
+            border-bottom: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .modal-body table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .modal-body table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .grand-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Checkout Button */
+        .btn-checkout {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 40px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        /* Footer Styling */
+        footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+            border-top: none;
+        }
+
+        footer a {
+            color: var(--gold-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1rem;
+                gap: 8px;
+            }
+
+            .logo-container {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-text .main {
+                font-size: 1rem;
+            }
+
+            .brand-text .tagline {
+                font-size: 0.6rem;
+            }
+
+            .navbar-nav .nav-link {
+                padding: 10px 0 !important;
+                margin: 5px 0;
+            }
+
+            .navbar-search {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .navbar-search .form-control {
+                width: 100%;
+            }
+
+            .cart-button {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .announcement-bar {
+                font-size: 0.85rem;
+                padding: 8px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    @using Newtonsoft.Json
+    @using Frmework.Models
+    @using Microsoft.AspNetCore.Http
+
+        @{
+            List<CartItem> cartItems = new List<CartItem>();
+            decimal grandTotal = 0;
+            int cartCount = 0;
+            int cartCountvalue = 0;
+
+            var sessionCart = ViewContext.HttpContext?.Session.GetString("Cart");
+
+            if (sessionCart != null)
+            {
+                cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sessionCart);
+                cartCount = cartItems.Sum(x => x.Quantity);
+                grandTotal = cartItems.Sum(x => x.ProductPrice);
+                cartCountvalue = cartItems.Count();
+            }
+
+            ViewBag.CartCountValue = cartCountvalue;
+            var userId = ViewContext.HttpContext?.Session.GetString("CustId");
+        }
+
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <i class="fas fa-truck-fast"></i> Free Shipping on Orders Over ₹500 | Premium Skincare Products
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" title="Go to Home">
+                    <div class="logo-container">
+                        <img src="~/images/logo.svg" alt="Premium Skincare Logo" />
+                    </div>
+                    <div class="brand-text">
+                        <div class="main">GlowSkin</div>
+                        <div class="tagline">Beauty Science</div>
+                    </div>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Products">
+                                <i class="fas fa-leaf"></i> Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">
+                                <i class="fas fa-info-circle"></i> About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">
+                                <i class="fas fa-envelope"></i> Contact
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-shield-alt"></i> Privacy
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="navbar-search ms-auto">
+                        <form class="d-flex" asp-controller="Home" asp-action="Products" method="get" role="search">
+                            <input class="form-control" type="search" name="q" placeholder="Search products..." 
+                                   aria-label="Search" value="@ViewBag.SearchQuery">
+                            <button class="btn btn-search" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </form>
+
+                        <button class="cart-button" data-bs-toggle="modal" data-bs-target="#cartModal" title="View Cart">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            @if (ViewBag.CartCountValue > 0)
+                            {
+                                <span class="badge">@ViewBag.CartCountValue</span>
+                            }
+                        </button>
+
+                        @if (!string.IsNullOrEmpty(userId))
+                        {
+                            <div class="dropdown">
+                                <button class="cart-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle"></i> Account
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-box"></i> My Orders</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Login", "Account")" class="cart-button">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-white">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <h5 class="mb-3">About Us</h5>
+                    <p>Premium skincare products crafted with science-backed ingredients for your beauty needs.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#home" class="text-white">Home</a></li>
+                        <li><a href="#products" class="text-white">Products</a></li>
+                        <li><a href="#about" class="text-white">About</a></li>
+                        <li><a href="#contact" class="text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="mb-3">Customer Service</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Track Order</a></li>
+                        <li><a href="#" class="text-white">Return Policy</a></li>
+                        <li><a href="#" class="text-white">Shipping Info</a></li>
+                        <li><a href="#" class="text-white">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="mb-3">Follow Us</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255, 255, 255, 0.2);">
+            <div class="text-center py-3">
+                <p class="mb-0">&copy; 2024 Premium Skincare - All Rights Reserved | 
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a> | 
+                    <a href="#" class="text-white">Terms & Conditions</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-shopping-cart"></i> Your Shopping Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @if (cartItems.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-box"></i> Product</th>
+                                        <th><i class="fas fa-tag"></i> Price</th>
+                                        <th><i class="fas fa-cube"></i> Qty</th>
+                                        <th><i class="fas fa-calculator"></i> Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in cartItems)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>@item.ProductName</strong>
+                                            </td>
+                                            <td>₹ @item.UnitPrice.ToString("F2")</td>
+                                            <td>@item.Quantity</td>
+                                            <td>
+                                                <strong>₹ @(item.Quantity * item.UnitPrice).ToString("F2")</strong>
+                                            </td>
+                                            <td>
+                                                <a asp-action="RemoveFromCart"
+                                                   asp-controller="Home"
+                                                   asp-route-id="@item.ProductId"
+                                                   class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i> Remove
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle"></i> Total Items: <strong>@cartItems.Count</strong>
+                        </div>
+
+                        <h5 class="text-end grand-total">
+                            <i class="fas fa-sum"></i> Grand Total: ₹ @grandTotal.ToString("F2")
+                        </h5>
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Continue Shopping</button>
+                            <a asp-controller="Checkout" asp-action="Checkout" class="btn btn-checkout">
+                                <i class="fas fa-credit-card"></i> Proceed to Checkout
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart" style="font-size: 3rem; color: #ccc;"></i>
+                            <p class="text-muted mt-3" style="font-size: 1.1rem;">Your cart is empty</p>
+                            <a asp-controller="Home" asp-action="Products" class="btn btn-primary mt-3" data-bs-dismiss="modal">
+                                <i class="fas fa-shopping-bag"></i> Start Shopping
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

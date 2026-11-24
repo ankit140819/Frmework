@@ -1,0 +1,160 @@
+﻿@model IEnumerable<Frmework.Models.Employee>
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 mt-4">
+            <div class="bg-light p-3 rounded-2">
+                <div class="d-flex align-items-ceneter justify-content-between">
+                    <div class="text-center"><h2>Employee List</h2></div>
+                    <form asp-action="Index" method="get" class="mb-3">
+                        <div class="input-group">
+                            <input type="text"
+                                   name="searchString"
+                                   value="@ViewData["CurrentFilter"]"
+                                   class="form-control"
+                                   placeholder="Search by name, email or department" />
+
+                            <button type="submit" class="btn btn-primary">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                    <div class="add-employee">
+                        <a asp-action="Create" class="btn btn-primary">Add Employee</a>
+                    </div>
+                </div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewBag.NameSort"
+                                   asp-route-searchString="@ViewData["CurrentFilter"]">
+                                    Name
+                                </a>
+                            </th>
+
+                            <th>Email</th>
+
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewBag.DeptSort"
+                                   asp-route-searchString="@ViewData["CurrentFilter"]">
+                                    Department
+                                </a>
+                            </th>
+
+                            <th>Salary</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var emp in Model)
+                        {
+                            <tr>
+                                <td>@emp.Name</td>
+                                <td>@emp.Department</td>
+                                <td>@emp.Email</td>
+                                <td>@emp.Salary</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@emp.EmployeeId" class="btn btn-warning btn-sm">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@emp.EmployeeId" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <nav>
+                    <ul class="pagination justify-content-center">
+
+                        <!-- Previous -->
+                        <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                               asp-route-searchString="@ViewData["CurrentFilter"]"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]">
+                                Previous
+                            </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-pageNumber="@i"
+                                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]">
+                                    @i
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Next -->
+                        <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                               asp-route-searchString="@ViewData["CurrentFilter"]"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]">
+                                Next
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Success</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <p>@TempData["SuccessMessage"]</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-success"
+                        data-bs-dismiss="modal">
+                    OK
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@if (TempData["ShowSuccessModal"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = new bootstrap.Modal(
+                document.getElementById('successModal')
+            );
+            modal.show();
+        });
+    </script>
+}
+
+
+
+

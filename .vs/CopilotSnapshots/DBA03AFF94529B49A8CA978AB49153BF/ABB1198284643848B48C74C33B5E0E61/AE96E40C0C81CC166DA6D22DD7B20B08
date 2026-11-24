@@ -1,0 +1,68 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Frmework.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Frmework.Controllers
+{
+    public class OnlineSalesController : Controller
+    {
+        public IActionResult Index(string q, string platform, string orderStatus, DateTime? from, DateTime? to)
+        {
+            // Sample data - replace with DB queries later
+            var sample = GetSampleSales();
+
+            // simple filters
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                sample = sample.Where(s => (s.CustomerName ?? "").Contains(q, StringComparison.OrdinalIgnoreCase)
+                                            || (s.ProductName ?? "").Contains(q, StringComparison.OrdinalIgnoreCase)
+                                            || (s.OrderId ?? "").Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (!string.IsNullOrWhiteSpace(platform) && platform != "All")
+            {
+                sample = sample.Where(s => string.Equals(s.SellerPlatform, platform, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (!string.IsNullOrWhiteSpace(orderStatus) && orderStatus != "All")
+            {
+                sample = sample.Where(s => string.Equals(s.OrderStatus, orderStatus, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (from.HasValue)
+                sample = sample.Where(s => s.OrderDate >= from.Value.Date).ToList();
+            if (to.HasValue)
+                sample = sample.Where(s => s.OrderDate <= to.Value.Date).ToList();
+
+            var vm = new OnlineSaleViewModel();
+            vm.Sales = sample;
+            vm.TotalOrders = vm.Sales.Count;
+            vm.TotalQuantity = vm.Sales.Sum(s => s.Quantity);
+            vm.TotalSalesAmount = vm.Sales.Sum(s => s.NetSaleAmount);
+            vm.PaidAmount = vm.Sales.Where(s => s.PaymentStatus == "Paid").Sum(s => s.NetSaleAmount);
+            vm.PendingAmount = vm.Sales.Where(s => s.PaymentStatus == "Pending").Sum(s => s.NetSaleAmount);
+            vm.ReturnsCount = vm.Sales.Count(s => s.ReturnStatus == "Returned" || s.ReturnStatus == "Refunded");
+
+            vm.AmazonSales = vm.Sales.Where(s => s.SellerPlatform == "Amazon").Sum(s => s.NetSaleAmount);
+            vm.FlipkartSales = vm.Sales.Where(s => s.SellerPlatform == "Flipkart").Sum(s => s.NetSaleAmount);
+            vm.MeeshoSales = vm.Sales.Where(s => s.SellerPlatform == "Meesho").Sum(s => s.NetSaleAmount);
+            vm.WebsiteSales = vm.Sales.Where(s => s.SellerPlatform == "23UForever Website").Sum(s => s.NetSaleAmount);
+
+            return View("~/Views/OnlineSales/Index.cshtml", vm);
+        }
+
+        private List<OnlineSale> GetSampleSales()
+        {
+            var now = DateTime.Now;
+            var list = new List<OnlineSale>
+            {
+                new OnlineSale{ SellerPlatform = "Amazon", OrderId = "AMZ1001", OrderDate = now.AddDays(-3), CustomerName = "Priya Sharma", ProductName = "Collagen Booster Cream", SKU = "CB001", Quantity = 2, MRP = 1499, SellingPrice = 1299, Discount = 200, PlatformCharges = 50, ShippingCharges = 40, GST = 45, NetSaleAmount = 1299*2 - 200, PaymentStatus = "Paid", OrderStatus = "Delivered", ReturnStatus = "None", SettlementAmount = 2390, SettlementDate = now.AddDays(-1), Remarks = "Fast delivery"},
+                new OnlineSale{ SellerPlatform = "Flipkart", OrderId = "FLP2002", OrderDate = now.AddDays(-7), CustomerName = "Rahul Mehta", ProductName = "Hyaluronic Serum", SKU = "HA002", Quantity = 1, MRP = 959, SellingPrice = 899, Discount = 60, PlatformCharges = 30, ShippingCharges = 20, GST = 18, NetSaleAmount = 899 - 60, PaymentStatus = "Pending", OrderStatus = "Processing", ReturnStatus = "None", SettlementAmount = 0, SettlementDate = null, Remarks = "Payment link sent"},
+                new OnlineSale{ SellerPlatform = "Meesho", OrderId = "MEE3003", OrderDate = now.AddDays(-1), CustomerName = "Anita Rao", ProductName = "Vitamin C Serum", SKU = "VC005", Quantity = 3, MRP = 999, SellingPrice = 849, Discount = 150, PlatformCharges = 45, ShippingCharges = 50, GST = 36, NetSaleAmount = 849*3 - 150, PaymentStatus = "Paid", OrderStatus = "Shipped", ReturnStatus = "None", SettlementAmount = 2097, SettlementDate = now, Remarks = "Bulk order"},
+                new OnlineSale{ SellerPlatform = "23UForever Website", OrderId = "WEB4004", OrderDate = now.AddDays(-10), CustomerName = "Sanjay Kumar", ProductName = "Niacinamide Serum", SKU = "NI003", Quantity = 1, MRP = 899, SellingPrice = 799, Discount = 100, PlatformCharges = 0, ShippingCharges = 30, GST = 18, NetSaleAmount = 799 - 100, PaymentStatus = "Paid", OrderStatus = "Delivered", ReturnStatus = "None", SettlementAmount = 699, SettlementDate = now.AddDays(-2), Remarks = "Website promo"},
+                new OnlineSale{ SellerPlatform = "Other Online Platforms", OrderId = "OTH5005", OrderDate = now.AddDays(-2), CustomerName = "Neha Gupta", ProductName = "Gel Cream", SKU = "LG004", Quantity = 2, MRP = 1199, SellingPrice = 1099, Discount = 100, PlatformCharges = 25, ShippingCharges = 40, GST = 54, NetSaleAmount = 1099*2 - 100, PaymentStatus = "Paid", OrderStatus = "Delivered", ReturnStatus = "Returned", SettlementAmount = 0, SettlementDate = null, Remarks = "Customer returned one unit"}
+            };
+
+            return list;
+        }
+    }
+}

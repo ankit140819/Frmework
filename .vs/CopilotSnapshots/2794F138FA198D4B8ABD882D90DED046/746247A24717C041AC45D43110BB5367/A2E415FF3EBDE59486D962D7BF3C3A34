@@ -1,0 +1,16 @@
+﻿namespace Frmework.Models
+{
+    public class Youth
+    {
+       public string Product_Id { get; set; }
+
+        public string Product_Name { get; set; }
+
+        public decimal Product_Amount { get;set; }
+
+        public string Short_Description { get; set; }
+
+        public string Full_Description { get; set; }
+
+    }
+}

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background Circle -->
+  <defs>
+	<linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+	  <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+	  <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+	</linearGradient>
+	<filter id="glow">
+	  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+	  <feMerge>
+		<feMergeNode in="coloredBlur"/>
+		<feMergeNode in="SourceGraphic"/>
+	  </feMerge>
+	</filter>
+  </defs>
+
+  <!-- Outer Circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#logoGradient)" filter="url(#glow)"/>
+
+  <!-- Inner Circle (lighter) -->
+  <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+
+  <!-- Leaf Shape (for skincare theme) -->
+  <path d="M 100 50 Q 120 70 115 95 Q 110 120 100 130 Q 90 120 85 95 Q 80 70 100 50" 
+		fill="#d4af37" opacity="0.9"/>
+
+  <!-- Leaf vein details -->
+  <path d="M 100 50 Q 105 85 100 130" stroke="white" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M 90 75 Q 95 85 100 95" stroke="white" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M 110 75 Q 105 85 100 95" stroke="white" stroke-width="1" fill="none" opacity="0.4"/>
+
+  <!-- Decorative Circle Elements -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+  <!-- Top sparkles -->
+  <circle cx="65" cy="50" r="3" fill="#d4af37" opacity="0.8"/>
+  <circle cx="135" cy="50" r="3" fill="#d4af37" opacity="0.8"/>
+
+  <!-- Bottom sparkles -->
+  <circle cx="65" cy="150" r="2.5" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="135" cy="150" r="2.5" fill="rgba(255,255,255,0.6)"/>
+
+  <!-- Outer glow ring -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="5,5"/>
+</svg>

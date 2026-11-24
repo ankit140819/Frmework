@@ -1,0 +1,6 @@
+﻿@model InventoryModelMvc.Models.DashboardInventoryModel
+@{
+    ViewData["Title"] = "Product Inventory";
+}
+
+<h1>Headermodal</h1>

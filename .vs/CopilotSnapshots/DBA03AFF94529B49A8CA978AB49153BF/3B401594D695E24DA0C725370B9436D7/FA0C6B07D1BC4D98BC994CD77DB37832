@@ -1,0 +1,183 @@
+﻿@model List<Frmework.Models.Youth>
+@{ ViewData["Title"] = "Home - Premium Skincare Solutions"; }
+<link rel="stylesheet" href="~/css/home.css" />
+
+<div class="home-page">
+    <div class="container">
+        <section class="home-hero row align-items-center">
+            <div class="col-lg-6 hero-left">
+                <small class="text-muted text-uppercase">Beauty that feels like you</small>
+                <h1>Glow Naturally.<br />Feel Beautiful.</h1>
+                <p>Premium skincare that blends nature-inspired ingredients with modern science, so your daily routine feels like a small act of self-care.</p>
+                <div class="d-flex gap-2 mt-4">
+                    <a class="btn btn-dark" href="@Url.Action("Products", "Home")">Shop Now</a>
+                    <a class="btn btn-outline-secondary" href="#categories">Explore Collection</a>
+                </div>
+                <div class="icon-features">
+                    <div class="feat">Dermatologically Tested</div>
+                    <div class="feat">Premium Ingredients</div>
+                    <div class="feat">Cruelty Free</div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-illustration">
+                    <img src="~/images/C00001.png" asp-append-version="true" alt="Premium skincare collection" class="img-fluid" />
+                </div>
+            </div>
+        </section>
+
+        <section id="categories" aria-labelledby="category-heading">
+            <div class="section-heading text-center">
+                <small class="text-uppercase text-muted">Discover your routine</small>
+                <h2 id="category-heading">Shop By Category</h2>
+            </div>
+            <div class="category-grid">
+                @foreach (var category in new[] { ("Face Care", "C00002.png"), ("Serums", "C00003.png"), ("Moisturizers", "C00004.png"), ("Cleansers", "C00005.png"), ("Beauty Essentials", "C00001.png") })
+                {
+                    <a class="category-item" href="@Url.Action("Products", "Home")">
+                        <img src="~/images/@category.Item2" asp-append-version="true" alt="@category.Item1" />
+                        <h5>@category.Item1</h5>
+                        <small class="text-muted">Shop Now</small>
+                    </a>
+                }
+            </div>
+        </section>
+
+        <section aria-labelledby="best-sellers-heading">
+            <div class="section-heading text-center">
+                <small class="text-uppercase text-muted">Loved by our customers</small>
+                <h2 id="best-sellers-heading">Our Best Sellers</h2>
+            </div>
+            <div class="products-row">
+                @foreach (var product in new[] { ("Collagen Booster Cream", "₹749", "C00002.png"), ("Hyaluronic Acid Face Serum", "₹699", "C00003.png"), ("Niacinamide Face Serum", "₹629", "C00004.png"), ("Luxurious Gel Cream", "₹679", "C00005.png") })
+                {
+                    <article class="product-card">
+                        <img src="~/images/@product.Item3" asp-append-version="true" alt="@product.Item1" class="img-fluid" />
+                        <h6>@product.Item1</h6>
+                        <div class="price">@product.Item2</div>
+                        <a class="btn btn-dark mt-2" href="@Url.Action("Products", "Home")">View Product</a>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section class="product-discovery" aria-labelledby="discovery-heading">
+            <div class="section-heading text-center">
+                <small class="text-uppercase text-muted">Find your perfect match</small>
+                <h2 id="discovery-heading">Shop By Skin Concern</h2>
+                <p class="section-intro">Build a routine around what your skin needs most today.</p>
+            </div>
+            <div class="concern-grid">
+                @foreach (var concern in new[]
+                {
+                    ("Hydration", "fa-droplet", "Plump, comfort, and replenish dry-feeling skin.", "C00003.png"),
+                    ("Brightening", "fa-sun", "Bring back a fresh, healthy-looking radiance.", "C00004.png"),
+                    ("Firming", "fa-leaf", "Support smoother-looking skin with nourishing care.", "C00002.png"),
+                    ("Barrier Care", "fa-shield-heart", "Calm and protect your everyday skin barrier.", "C00005.png")
+                })
+                {
+                    <a class="concern-card" href="@Url.Action("Products", "Home")">
+                        <div class="concern-image"><img src="~/images/@concern.Item4" asp-append-version="true" alt="@concern.Item1 skincare" /></div>
+                        <div class="concern-copy"><span class="concern-icon"><i class="fa-solid @concern.Item2"></i></span><h5>@concern.Item1</h5><p>@concern.Item3</p><span class="text-link">Explore products <i class="fa-solid fa-arrow-right"></i></span></div>
+                    </a>
+                }
+            </div>
+        </section>
+
+        <section class="featured-collection" aria-labelledby="collection-heading">
+            <div class="section-heading d-flex justify-content-between align-items-end flex-wrap gap-3">
+                <div><small class="text-uppercase text-muted">Curated for your shelf</small><h2 id="collection-heading">The Glow Essentials</h2><p class="section-intro mb-0">Simple, effective formulas to make every step of your routine feel special.</p></div>
+                <a class="text-link collection-link" href="@Url.Action("Products", "Home")">View all products <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="essentials-grid">
+                @foreach (var product in new[]
+                {
+                    ("01", "Gentle Daily Cleanser", "A soft start for a clean, comfortable complexion.", "₹549", "C00005.png", "Best for every routine"),
+                    ("02", "Hyaluronic Glow Serum", "A lightweight hydration boost for a dewy finish.", "₹699", "C00003.png", "Daily hydration"),
+                    ("03", "Collagen Booster Cream", "Rich, silky moisture for a smooth-looking finish.", "₹749", "C00002.png", "Customer favorite")
+                })
+                {
+                    <article class="essential-card">
+                        <div class="essential-image"><span class="essential-number">@product.Item1</span><img src="~/images/@product.Item5" asp-append-version="true" alt="@product.Item2" /></div>
+                        <div class="essential-details"><small>@product.Item6</small><h4>@product.Item2</h4><p>@product.Item3</p><div class="essential-bottom"><strong>@product.Item4</strong><a href="@Url.Action("Products", "Home")" aria-label="View @product.Item2"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></div></div>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section class="routine-guide" aria-labelledby="routine-heading">
+            <div class="routine-intro"><small class="text-uppercase text-muted">A ritual made easy</small><h2 id="routine-heading">Your Three-Step Glow Routine</h2><p>Good skincare does not have to be complicated. Start with these everyday essentials and build from there.</p><a class="btn btn-dark" href="@Url.Action("Products", "Home")">Build Your Routine</a></div>
+            <div class="routine-steps">
+                <div class="routine-step"><span>01</span><i class="fa-solid fa-hand-sparkles"></i><h5>Cleanse</h5><p>Refresh your skin and prepare it for the steps ahead.</p></div>
+                <div class="routine-step"><span>02</span><i class="fa-solid fa-wand-magic-sparkles"></i><h5>Treat</h5><p>Use a targeted serum to care for your personal skin goals.</p></div>
+                <div class="routine-step"><span>03</span><i class="fa-solid fa-sun"></i><h5>Moisturize</h5><p>Seal in comfort and keep your skin feeling soft all day.</p></div>
+            </div>
+        </section>
+
+        <section class="routine-request" aria-labelledby="routine-request-heading">
+            <div class="routine-request-copy">
+                <small class="text-uppercase text-muted">Personalized skincare guidance</small>
+                <h2 id="routine-request-heading">Get a routine made for your skin</h2>
+                <p>Share your contact details and one of our skincare specialists will send helpful routine recommendations and product guidance.</p>
+                <div class="routine-contact-points">
+                    <span><i class="fa-solid fa-mobile-screen-button"></i> Mobile-friendly advice</span>
+                    <span><i class="fa-regular fa-envelope"></i> Routine sent by email</span>
+                </div>
+            </div>
+            <form class="routine-request-form" method="post" asp-controller="Home" asp-action="SendRoutineRequest">
+                @Html.AntiForgeryToken()
+                @if (TempData["RoutineResult"] is string routineResult)
+                {
+                    <div class="routine-feedback" role="status"><i class="fa-solid fa-circle-check"></i> @routineResult</div>
+                }
+                <div class="routine-form-row">
+                    <div class="routine-field"><label for="routineName">Your name</label><input id="routineName" name="name" type="text" class="form-control" placeholder="Enter your name" autocomplete="name" required /></div>
+                    <div class="routine-field"><label for="routineMobile">Mobile number</label><input id="routineMobile" name="mobile" type="tel" class="form-control" placeholder="Enter mobile number" autocomplete="tel" pattern="[0-9+()\-\s]{7,20}" required /></div>
+                </div>
+                <div class="routine-form-row">
+                    <div class="routine-field"><label for="routineEmail">Email address</label><input id="routineEmail" name="email" type="email" class="form-control" placeholder="you@example.com" autocomplete="email" required /></div>
+                    <div class="routine-field"><label for="routineConcern">Main skin concern</label><select id="routineConcern" name="concern" class="form-select"><option value="Hydration">Hydration</option><option value="Brightening">Brightening</option><option value="Firming">Firming</option><option value="Barrier Care">Barrier Care</option><option value="General routine">General routine</option></select></div>
+                </div>
+                <button class="btn btn-dark" type="submit"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Send My Skincare Routine</button>
+            </form>
+        </section>
+
+        <section class="cta-strip">
+            <div>
+                <small class="text-uppercase text-muted">Your daily ritual</small>
+                <h2>Your Daily Glow Starts Here</h2>
+                <p class="text-muted">Discover skincare designed to make your natural beauty shine.</p>
+                <a class="btn btn-dark" href="@Url.Action("Products", "Home")">Shop Collection</a>
+            </div>
+            <img src="~/images/C00003.png" asp-append-version="true" alt="Daily skincare ritual" />
+        </section>
+
+        <section aria-labelledby="reviews-heading">
+            <div class="section-heading text-center">
+                <small class="text-uppercase text-muted">Real routines, real results</small>
+                <h2 id="reviews-heading">What Our Customers Say</h2>
+            </div>
+            <div class="testimonials">
+                @foreach (var review in new[] { ("My skin feels calmer and looks clearer after a few weeks with the niacinamide serum.", "Aanya S."), ("The hyaluronic serum is my daily must-have. Skin looks plump and hydrated.", "Meera R."), ("Lovely packaging and a gel cream that feels weightless. Delivery was quick too.", "Riya P.") })
+                {
+                    <article class="testimonial">
+                        <p>“@review.Item1”</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <img src="~/images/no-image.png" asp-append-version="true" alt="@review.Item2" />
+                            <div class="ms-2"><strong>@review.Item2</strong><br /><small class="text-muted">Verified Buyer</small></div>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <h2>Get 10% Off Your First Order</h2>
+            <p class="text-muted">Subscribe for beauty tips, exclusive offers, and new product launches.</p>
+            <form class="newsletter-form" method="post" asp-controller="Newsletter" asp-action="Subscribe">
+                <input type="email" name="email" class="form-control" placeholder="Your email address" required />
+                <button class="btn btn-dark" type="submit">Subscribe</button>
+            </form>
+        </section>
+    </div>
+</div>

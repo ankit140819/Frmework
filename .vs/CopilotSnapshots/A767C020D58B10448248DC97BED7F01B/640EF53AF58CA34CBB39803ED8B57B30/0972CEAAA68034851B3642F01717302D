@@ -1,0 +1,30 @@
+﻿@page
+@model Frmework.Areas.Admin.Pages.OrdersModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h3>Orders</h3>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Order Id</th>
+                <th>Order Date</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach(var o in Model.Orders)
+        {
+            <tr>
+                <td>@o.OrderId</td>
+                <td>@o.OrderDate</td>
+                <td>@o.TotalAmount</td>
+                <td>@o.Status</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

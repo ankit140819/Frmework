@@ -1,0 +1,42 @@
+.auth-page {
+    --auth-ink: #302b2b;
+    --auth-muted: #806f6c;
+    --auth-rose: #c98d84;
+    --auth-blush: #f8ece9;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+.auth-page .auth-root { max-width: 920px; min-height: 570px; border: 1px solid #eee0dc; border-radius: 22px; box-shadow: 0 18px 48px rgba(80,52,48,.1); }
+.auth-page .auth-side { background: linear-gradient(145deg, #463a3b, #302b2b); }
+.auth-page .orb1 { background: #dca9a2; opacity: .25; }
+.auth-page .orb2 { background: #e8c4ba; opacity: .18; }
+.auth-page .orb3 { background: #c98d84; opacity: .2; }
+.auth-page .side-icon { background: rgba(248,236,233,.13); border-color: rgba(248,236,233,.25); }
+.auth-page .side-title { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: 2rem; }
+.auth-page .side-sub { color: #e6d8d4; }
+.auth-page .feat-dot { background: #e7b6ad !important; }
+.auth-page .feat span { color: #e6d8d4; }
+.auth-page .auth-form-area { background: #fffdfb; padding: 2.8rem; }
+.auth-page .auth-tabs { background: var(--auth-blush); border-radius: 10px; }
+.auth-page .auth-tab { color: #a18b86; }
+.auth-page .auth-tab.active { color: var(--auth-ink); }
+.auth-page .field label { color: var(--auth-muted); }
+.auth-page .field input { border-color: #eadbd7; background: #fffaf8; border-radius: 9px; }
+.auth-page .field input:focus { border-color: var(--auth-rose); box-shadow: 0 0 0 3px rgba(201,141,132,.13); }
+.auth-page .field-icon:hover { color: var(--auth-rose); }
+.auth-page .remember input[type=checkbox] { accent-color: var(--auth-rose); }
+.auth-page .forgot,
+.auth-page .switch-text a { color: #a76e66; }
+.auth-page .btn-primary-auth { background: var(--auth-ink); border-radius: 9px; }
+.auth-page .btn-primary-auth:hover { background: var(--auth-rose); }
+.auth-page .social-btn { border-color: #eadbd7; background: #fff; border-radius: 9px; }
+.auth-page .social-btn:hover { background: var(--auth-blush); border-color: #dcb0a9; }
+.auth-page .strength-fill { background: var(--auth-rose) !important; }
+
+@media (max-width: 767.98px) {
+    .auth-page { padding-top: 1rem; }
+    .auth-page .auth-root { flex-direction: column; min-height: auto; }
+    .auth-page .auth-side { width: 100%; min-height: 230px; padding: 1.8rem; }
+    .auth-page .side-features { display: none; }
+    .auth-page .auth-form-area { padding: 1.6rem; }
+}

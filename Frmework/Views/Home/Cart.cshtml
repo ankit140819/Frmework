@@ -1,0 +1,33 @@
+﻿@model List<CartItem>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Unit Price</th>
+            <th>Qty</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>₹ @item.UnitPrice</td>
+                <td>@item.Quantity</td>
+                <td>₹ @item.ProductPrice</td>
+                <td>
+                    <a asp-action="RemoveFromCart"
+                       asp-route-id="@item.ProductId"
+                       class="btn btn-danger btn-sm">
+                        Remove
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Grand Total: ₹ @ViewBag.GrandTotal</h4>

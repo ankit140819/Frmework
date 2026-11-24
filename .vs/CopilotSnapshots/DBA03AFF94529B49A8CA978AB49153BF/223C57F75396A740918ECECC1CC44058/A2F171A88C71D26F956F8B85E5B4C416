@@ -1,0 +1,671 @@
+﻿@model List<Frmework.Models.Youth>
+@{ 
+    ViewData["Title"] = "Products";
+    int pageSize = 12;
+    int currentPage = 1;
+    if (ViewBag.CurrentPage != null)
+    {
+        if (int.TryParse(ViewBag.CurrentPage.ToString(), out int pageNum))
+        {
+            currentPage = pageNum;
+        }
+    }
+    var totalProducts = Model.Count;
+    var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+    var startIndex = (currentPage - 1) * pageSize;
+    var paginatedProducts = Model.Skip(startIndex).Take(pageSize).ToList();
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<link rel="stylesheet" href="~/css/products.css" asp-append-version="true" />
+
+<!-- Hero Section -->
+<div class="products-page">
+<div class="products-hero py-5 mb-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold text-white mb-3">Premium Skincare Collection</h1>
+                <p class="lead text-white-50 mb-0">Discover science-backed beauty products crafted for every skin type. Elevate your skincare routine today.</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <img src="~/images/C00001.png" asp-append-version="true" class="products-hero-image" alt="Premium skincare products" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <!-- Product Statistics Bar -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-light rounded-3 p-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="mb-0"><i class="fas fa-box text-primary"></i> Total Products: <span class="fw-bold">@totalProducts</span></h6>
+                    <small class="text-muted">Showing @(startIndex + 1) - @(Math.Min(startIndex + pageSize, totalProducts)) of @totalProducts</small>
+                </div>
+                <form class="d-flex gap-2" method="get" asp-action="Products" asp-controller="Home">
+                    <input name="q" class="form-control" style="max-width:300px" placeholder="🔍 Search by name, benefit..." value="@ViewBag.SearchQuery" />
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+    <div class="row">
+        <!-- Enhanced Sidebar Filters -->
+        <aside class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4" style="position:sticky; top:100px;">
+                <div class="mb-4">
+                    <h5 class="mb-3 fw-bold"><i class="fas fa-sliders-h text-primary"></i> Refine Your Search</h5>
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchQuery) || !string.IsNullOrEmpty(ViewBag.SelectedSkinType))
+                    {
+                        <a href="@Url.Action("Products", "Home")" class="badge bg-danger text-decoration-none" title="Clear all filters">
+                            <i class="fas fa-times"></i> Clear All Filters
+                        </a>
+                    }
+                </div>
+
+                <form method="get" asp-action="Products" asp-controller="Home" class="filter-form">
+                    <!-- Skin Type Filter -->
+                    <div class="filter-group mb-4 pb-4 border-bottom">
+                        <label class="form-label fw-bold mb-3"><i class="fas fa-spa text-success"></i> Skin Type</label>
+                        <div class="filter-options">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="skinType" value="" id="skinAll" checked="@(string.IsNullOrEmpty(ViewBag.SelectedSkinType) ? "checked" : null)" />
+                                <label class="form-check-label" for="skinAll">All Skin Types</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="skinType" value="Dry" id="skinDry" checked="@(ViewBag.SelectedSkinType == "Dry" ? "checked" : null)" />
+                                <label class="form-check-label" for="skinDry"><span class="badge bg-warning">Dry</span> Needs hydration</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="skinType" value="Oily" id="skinOily" checked="@(ViewBag.SelectedSkinType == "Oily" ? "checked" : null)" />
+                                <label class="form-check-label" for="skinOily"><span class="badge bg-info">Oily</span> Needs balancing</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="skinType" value="Combination" id="skinComb" checked="@(ViewBag.SelectedSkinType == "Combination" ? "checked" : null)" />
+                                <label class="form-check-label" for="skinComb"><span class="badge bg-secondary">Combo</span> Mixed care</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="skinType" value="Sensitive" id="skinSens" checked="@(ViewBag.SelectedSkinType == "Sensitive" ? "checked" : null)" />
+                                <label class="form-check-label" for="skinSens"><span class="badge bg-danger">Sensitive</span> Gentle formula</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="skinType" value="Normal" id="skinNorm" checked="@(ViewBag.SelectedSkinType == "Normal" ? "checked" : null)" />
+                                <label class="form-check-label" for="skinNorm"><span class="badge bg-success">Normal</span> Well-balanced</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Filter -->
+                    <div class="filter-group mb-4 pb-4 border-bottom">
+                        <label class="form-label fw-bold mb-3"><i class="fas fa-tag text-danger"></i> Price Range</label>
+                        <div class="d-flex gap-2 mb-3">
+                            <div class="flex-grow-1">
+                                <input type="number" name="minPrice" class="form-control form-control-sm" placeholder="Min ₹" />
+                            </div>
+                            <div class="flex-grow-1">
+                                <input type="number" name="maxPrice" class="form-control form-control-sm" placeholder="Max ₹" />
+                            </div>
+                        </div>
+                        <small class="text-muted">Price range: ₹100 - ₹5000</small>
+                    </div>
+
+                    <!-- Sorting -->
+                    <div class="filter-group mb-4 pb-4 border-bottom">
+                        <label class="form-label fw-bold mb-3"><i class="fas fa-sort text-info"></i> Sort By</label>
+                        <select name="sort" class="form-select form-select-sm">
+                            <option value="">⭐ Recommended</option>
+                            <option value="price_asc">💰 Price: Low to High</option>
+                            <option value="price_desc">💸 Price: High to Low</option>
+                        </select>
+                    </div>
+
+                    <!-- Benefits Filter (Placeholder for future) -->
+                    <div class="filter-group mb-4">
+                        <label class="form-label fw-bold mb-3"><i class="fas fa-heart text-rose"></i> Benefits</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-light text-dark">Anti-Aging</span>
+                            <span class="badge bg-light text-dark">Hydrating</span>
+                            <span class="badge bg-light text-dark">Brightening</span>
+                            <span class="badge bg-light text-dark">Oil Control</span>
+                        </div>
+                    </div>
+
+                    <!-- Filter Button -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill">
+                            <i class="fas fa-check"></i> Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Products Section -->
+        <section class="col-lg-9">
+            @if (paginatedProducts.Any())
+            {
+                <div class="row g-4">
+                    @foreach (var product in paginatedProducts)
+                    {
+                        var fallback = $"/images/placeholder.png";
+                        <div class="col-12 col-sm-6 col-lg-6 col-xl-4">
+                            <div class="product-card h-100 position-relative overflow-hidden rounded-4 shadow-sm" style="border: 1px solid #e0e0e0;">
+                                <!-- Product Image Container -->
+                                <div class="position-relative overflow-hidden" style="height:260px; background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);">
+                                    <img data-fallback="@fallback" onerror="handleImageError(this)" 
+                                         src="@Url.Content($"~/images/{product.Product_Id}.png")" 
+                                         class="w-100 h-100 object-fit-cover product-img" 
+                                         alt="@product.Product_Name" />
+
+                                    <!-- Badge with discount/new -->
+                                    <div class="position-absolute top-0 start-0 m-3">
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">
+                                            <i class="fas fa-bolt"></i> NEW
+                                        </span>
+                                    </div>
+
+                                    <!-- Wishlist/Heart Button -->
+                                    <button class="btn btn-light rounded-circle position-absolute top-0 end-0 m-3 wish-btn shadow-sm" 
+                                            style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;"
+                                            title="Add to wishlist" 
+                                            onclick="toggleWishlist(this, '@product.Product_Id')">
+                                        <i class="fa fa-heart"></i>
+                                    </button>
+
+                                    <!-- Quick Actions Overlay -->
+                                    <div class="position-absolute bottom-0 start-0 w-100 product-actions" 
+                                         style="background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); padding: 20px 15px; display:flex; gap:8px;">
+                                        <a asp-action="Product_Details" asp-route-id="@product.Product_Id" 
+                                           class="btn btn-sm btn-light flex-grow-1 rounded-pill fw-bold">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <button class="btn btn-sm btn-primary flex-grow-1 rounded-pill fw-bold" 
+                                                data-id="@product.Product_Id" 
+                                                data-name="@product.Product_Name" 
+                                                data-price="@product.Product_Amount" 
+                                                data-desc="@product.Full_Description" 
+                                                onclick="openQuickView(this)">
+                                            <i class="fas fa-expand"></i> Preview
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Product Info -->
+                                <div class="p-3 d-flex flex-column" style="height: calc(100% - 260px);">
+                                    <!-- Product Name -->
+                                    <h5 class="mb-2 fw-bold" style="font-size: 1.05rem; line-height: 1.3; min-height: 2.6em;">
+                                        @product.Product_Name
+                                    </h5>
+
+                                    <!-- Rating -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="text-warning" style="font-size: 0.9rem;">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                        </div>
+                                        <small class="text-muted ms-2">(4.8) · 128 reviews</small>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <p class="text-muted small mb-3" style="line-height: 1.4; max-height: 2.8em; overflow: hidden;">
+                                        @product.Short_Description
+                                    </p>
+
+                                    <!-- Skin Type Badge -->
+                                    @if (!string.IsNullOrEmpty(product.SkinType))
+                                    {
+                                        <div class="mb-3">
+                                            <span class="badge bg-gradient-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                                <i class="fas fa-droplet"></i> @product.SkinType
+                                            </span>
+                                        </div>
+                                    }
+
+                                    <!-- Price & Action Buttons -->
+                                    <div class="mt-auto">
+                                        <div class="mb-3">
+                                            <div class="fw-bold fs-5 text-primary mb-1">₹ @product.Product_Amount</div>
+                                            <small class="text-muted">✓ Inclusive of taxes · FREE shipping</small>
+                                        </div>
+                                        <div class="d-grid gap-2">
+                                            <a asp-action="AddToCart" 
+                                               asp-route-Product_Id="@product.Product_Id" 
+                                               asp-route-productName="@product.Product_Name" 
+                                               asp-route-selectedQty="1" 
+                                               asp-route-selectedTotalPrice="@product.Product_Amount" 
+                                               class="btn btn-primary btn-sm rounded-pill fw-bold">
+                                                <i class="fas fa-shopping-bag"></i> Add to Cart
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Advanced Pagination -->
+                @if (totalPages > 1)
+                {
+                    <div class="mt-5 mb-5">
+                        <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                            <ul class="pagination pagination-lg">
+                                @if (currentPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link rounded-start-3" href="@Url.Action("Products", "Home", new { page = 1, q = ViewBag.SearchQuery, skinType = ViewBag.SelectedSkinType })">
+                                            <i class="fas fa-chevron-left"></i> First
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Products", "Home", new { page = currentPage - 1, q = ViewBag.SearchQuery, skinType = ViewBag.SelectedSkinType })">
+                                            <i class="fas fa-chevron-left"></i> Prev
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link rounded-start-3"><i class="fas fa-chevron-left"></i> First</span>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link"><i class="fas fa-chevron-left"></i> Prev</span>
+                                    </li>
+                                }
+
+                                @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
+                                {
+                                    if (i == currentPage)
+                                    {
+                                        <li class="page-item active">
+                                            <span class="page-link" style="background-color: #667eea; border-color: #667eea;">
+                                                @i <span class="visually-hidden">(current)</span>
+                                            </span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@Url.Action("Products", "Home", new { page = i, q = ViewBag.SearchQuery, skinType = ViewBag.SelectedSkinType })">@i</a>
+                                        </li>
+                                    }
+                                }
+
+                                @if (currentPage < totalPages)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Products", "Home", new { page = currentPage + 1, q = ViewBag.SearchQuery, skinType = ViewBag.SelectedSkinType })">
+                                            Next <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link rounded-end-3" href="@Url.Action("Products", "Home", new { page = totalPages, q = ViewBag.SearchQuery, skinType = ViewBag.SelectedSkinType })">
+                                            Last <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next <i class="fas fa-chevron-right"></i></span>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link rounded-end-3">Last <i class="fas fa-chevron-right"></i></span>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                        <div class="text-center mt-3">
+                            <small class="text-muted">Page @currentPage of @totalPages</small>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info rounded-4 p-5 text-center" role="alert">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🔍</div>
+                    <h5 class="fw-bold">No Products Found</h5>
+                    <p class="text-muted mb-0">Try adjusting your filters or search terms to find what you're looking for.</p>
+                    <a href="@Url.Action("Products", "Home")" class="btn btn-primary mt-3 rounded-pill">
+                        <i class="fas fa-redo"></i> Reset Filters
+                    </a>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+<!-- Enhanced Quick View Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <img id="qvImage" src="/images/placeholder.png" class="img-fluid rounded-3 shadow-sm w-100" alt="">
+                        <div class="mt-3 text-center">
+                            <span class="badge bg-danger rounded-pill">NEW LAUNCH</span>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h4 id="qvName" class="mb-3 fw-bold"></h4>
+                        <div class="mb-3">
+                            <div class="text-warning mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <small class="text-muted ms-2">(4.8) · 128 reviews</small>
+                            </div>
+                        </div>
+                        <p id="qvDesc" class="text-muted mb-4"></p>
+                        <div class="mb-4">
+                            <div class="fw-bold text-primary fs-4 mb-1" id="qvPrice"></div>
+                            <small class="text-muted">✓ Inclusive of taxes · FREE shipping</small>
+                        </div>
+                        <div class="mb-4 p-3 bg-light rounded-3">
+                            <small class="text-muted d-block mb-2"><i class="fas fa-check-circle text-success"></i> 100% Authentic Products</small>
+                            <small class="text-muted d-block mb-2"><i class="fas fa-check-circle text-success"></i> 30-day Money Back Guarantee</small>
+                            <small class="text-muted"><i class="fas fa-check-circle text-success"></i> Free Returns & Exchanges</small>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a id="qvAdd" class="btn btn-primary btn-lg rounded-pill fw-bold">
+                                <i class="fas fa-shopping-bag"></i> Add to Cart
+                            </a>
+                            <a id="qvDetails" class="btn btn-outline-primary btn-lg rounded-pill fw-bold">
+                                <i class="fas fa-eye"></i> View Full Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --primary-color: #667eea;
+        --secondary-color: #764ba2;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .bg-gradient {
+        background: var(--primary-gradient);
+    }
+
+    .object-fit-cover { 
+        object-fit: cover; 
+    }
+
+    /* Product Card Styling */
+    .product-card {
+        transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15) !important;
+        border-color: var(--primary-color) !important;
+    }
+
+    .product-img {
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .product-card:hover .product-img {
+        transform: scale(1.08);
+    }
+
+    .product-card:hover .product-actions {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        transition: all 0.3s ease;
+    }
+
+    .product-actions {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+    }
+
+    /* Wishlist Button */
+    .wish-btn {
+        transition: all 0.3s ease;
+        border: 2px solid #f0f0f0;
+    }
+
+    .wish-btn:hover {
+        background-color: #fff3cd !important;
+        transform: scale(1.1);
+    }
+
+    .wish-btn.active {
+        color: #e74c3c !important;
+        background-color: #ffebee !important;
+    }
+
+    /* Filter Styling */
+    .filter-group {
+        animation: slideIn 0.3s ease;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .filter-options .form-check-label {
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+    .filter-options .form-check-input:checked ~ .form-check-label {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    /* Pagination */
+    .pagination .page-link {
+        color: var(--primary-color);
+        border-color: #dee2e6;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        margin: 0 4px;
+    }
+
+    .pagination .page-link:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    /* Modal */
+    .modal-content {
+        border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    /* Badge Gradient */
+    .badge.bg-gradient-primary {
+        background: var(--primary-gradient) !important;
+        color: white;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .sticky-top {
+            position: static !important;
+            top: auto !important;
+        }
+
+        .product-card {
+            margin-bottom: 15px;
+        }
+
+        .display-4 {
+            font-size: 2rem !important;
+        }
+
+        .lead {
+            font-size: 1rem !important;
+        }
+    }
+
+    /* Button Styles */
+    .btn-primary {
+        background: var(--primary-gradient);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-outline-primary:hover {
+        background: var(--primary-gradient);
+        border-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Card Hover Effects */
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        border-color: var(--primary-color) !important;
+    }
+
+    /* Text truncate multi-line */
+    .text-truncate {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+    function openQuickView(btn) {
+        var id = btn.getAttribute('data-id');
+        var name = btn.getAttribute('data-name');
+        var price = btn.getAttribute('data-price');
+        var desc = btn.getAttribute('data-desc') || '';
+
+        document.getElementById('qvName').innerText = name;
+        document.getElementById('qvPrice').innerText = '₹ ' + price;
+        document.getElementById('qvImage').src = '/images/' + id + '.png';
+        document.getElementById('qvDesc').innerText = desc;
+        document.getElementById('qvDetails').href = '/Home/Product_Details?id=' + encodeURIComponent(id);
+        document.getElementById('qvAdd').href = '/Home/AddToCart?Product_Id=' + encodeURIComponent(id) + '&productName=' + encodeURIComponent(name) + '&selectedQty=1&selectedTotalPrice=' + encodeURIComponent(price);
+
+        var modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+        modal.show();
+    }
+
+    function toggleWishlist(btn, id) {
+        btn.classList.toggle('active');
+        var hearts = localStorage.getItem('wishlist') ? JSON.parse(localStorage.getItem('wishlist')) : [];
+
+        if (btn.classList.contains('active')) {
+            if (!hearts.includes(id)) {
+                hearts.push(id);
+            }
+            // Show toast notification
+            showToast('Added to Wishlist', 'success');
+        } else {
+            hearts = hearts.filter(x => x !== id);
+            showToast('Removed from Wishlist', 'info');
+        }
+
+        localStorage.setItem('wishlist', JSON.stringify(hearts));
+    }
+
+    function handleImageError(img) {
+        var fb = img.getAttribute('data-fallback');
+        if (fb && fb !== '') {
+            img.onerror = null;
+            img.src = fb;
+            return;
+        }
+        img.onerror = null;
+        img.src = '/images/placeholder.png';
+    }
+
+    // Check wishlist on page load
+    function loadWishlist() {
+        var hearts = localStorage.getItem('wishlist') ? JSON.parse(localStorage.getItem('wishlist')) : [];
+        hearts.forEach(id => {
+            var btn = document.querySelector('[onclick*="' + id + '"]');
+            if (btn) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    // Toast notification
+    function showToast(message, type) {
+        var toastHtml = `
+            <div class="toast align-items-center text-white bg-${type === 'success' ? 'success' : 'info'} border-0 rounded-3 shadow" role="alert" aria-live="assertive" aria-atomic="true" style="position:fixed; top:20px; right:20px; z-index:9999; min-width:300px;">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = toastHtml;
+        var toastEl = tempDiv.firstElementChild;
+        document.body.appendChild(toastEl);
+
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+
+        setTimeout(() => toastEl.remove(), 3000);
+    }
+
+    // Load wishlist on page load
+    document.addEventListener('DOMContentLoaded', loadWishlist);
+</script>
+

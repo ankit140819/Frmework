@@ -1,0 +1,41 @@
+﻿@model Frmework.Models.Employee
+
+<div class="container">
+    <div class="row align-items-center justify-content-center">
+        <div class="col-lg-9 bg-light mt-4 p-4 shadow">
+            <div class="text-center mt-2">
+                <h2>Edit Employee</h2>
+            </div>
+            <form asp-action="Edit" method="post">
+                <div class="text-cener mt-4">
+                    <input type="hidden" asp-for="EmployeeId" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Name</label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Department</label>
+                    <input asp-for="Department" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Salary</label>
+                    <input asp-for="Salary" class="form-control" />
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

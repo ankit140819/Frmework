@@ -1,0 +1,65 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Data.SqlClient;
+
+namespace Frmework.Areas.Admin.Pages
+{
+    public class IndexModel : PageModel
+    {
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<IndexModel> _logger;
+
+        public int OrdersCount { get; set; }
+        public int ProductsCount { get; set; }
+        public int CustomersCount { get; set; }
+        public int AddressesCount { get; set; }
+
+        public IndexModel(IConfiguration configuration, ILogger<IndexModel> logger)
+        {
+            _configuration = configuration;
+            _logger = logger;
+        }
+
+        public IActionResult OnGet()
+        {
+            // simple session-based admin guard - set HttpContext.Session.SetString("IsAdmin","1") to allow
+            var isAdmin = HttpContext.Session.GetString("IsAdmin");
+            if (string.IsNullOrEmpty(isAdmin) || isAdmin != "1")
+            {
+                // redirect to login (AccountController) if not admin
+                return RedirectToAction("Login", "Account", new { returnUrl = Url.Page("/Index", new { area = "Admin" }) });
+            }
+
+            try
+            {
+                string conStr = _configuration.GetConnectionString("DefaultConnection");
+                using (SqlConnection con = new SqlConnection(conStr))
+                {
+                    con.Open();
+                    using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Order_Master", con))
+                    {
+                        OrdersCount = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                    }
+                    using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Products_Master", con))
+                    {
+                        ProductsCount = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                    }
+                    using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Customer_Master", con))
+                    {
+                        CustomersCount = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                    }
+                    using (var cmd = new SqlCommand("SELECT COUNT(*) FROM Address_Master", con))
+                    {
+                        AddressesCount = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Unable to read counts for admin dashboard - showing zeros");
+            }
+
+            return Page();
+        }
+    }
+}

@@ -1,0 +1,50 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Frmework.Models;
+using System;
+using System.Collections.Generic;
+
+namespace Frmework.Controllers
+{
+    public class ReportsController : Controller
+    {
+        public IActionResult Index(DateTime? from, DateTime? to, string platform, string product)
+        {
+            // Sample sales dataset (in-memory) - in production replace with repository/service
+            var now = DateTime.Now.Date;
+            var sampleSales = new[] {
+                new { OrderId = "AMZ1001", Platform = "Amazon", Product = "Collagen Booster Cream", Date = now.AddDays(-30), Quantity = 20, Net = 1299m*20 },
+                new { OrderId = "AMZ1002", Platform = "Amazon", Product = "Vitamin C Face Serum", Date = now.AddDays(-25), Quantity = 15, Net = 849m*15 },
+                new { OrderId = "FLP2001", Platform = "Flipkart", Product = "Hyaluronic Acid Face Serum", Date = now.AddDays(-20), Quantity = 10, Net = 899m*10 },
+                new { OrderId = "MEE3001", Platform = "Meesho", Product = "Niacinamide Face Serum", Date = now.AddDays(-10), Quantity = 8, Net = 799m*8 },
+                new { OrderId = "WEB4001", Platform = "23UForever Website", Product = "Collagen Booster Cream", Date = now.AddDays(-5), Quantity = 12, Net = 1299m*12 },
+                new { OrderId = "OTH5001", Platform = "Other Online Platforms", Product = "Lustrous Gel Cream", Date = now.AddDays(-3), Quantity = 6, Net = 1099m*6 }
+            }.AsQueryable();
+
+            // apply filters
+            if (from.HasValue) sampleSales = sampleSales.Where(s => s.Date >= from.Value.Date);
+            if (to.HasValue) sampleSales = sampleSales.Where(s => s.Date <= to.Value.Date);
+            if (!string.IsNullOrWhiteSpace(platform) && platform != "All") sampleSales = sampleSales.Where(s => s.Platform == platform);
+            if (!string.IsNullOrWhiteSpace(product) && product != "All") sampleSales = sampleSales.Where(s => s.Product == product);
+
+            var vm = new ReportsViewModel();
+            vm.TotalSalesAmount = sampleSales.Sum(s => s.Net);
+            vm.TotalOrders = sampleSales.Select(s => s.OrderId).Distinct().Count();
+            vm.TotalUnitsSold = sampleSales.Sum(s => s.Quantity);
+            vm.TotalCustomers = 0; // placeholder
+
+            vm.TopProducts = sampleSales.GroupBy(s => s.Product)
+                .Select(g => new TopProductItem{ ProductName = g.Key, UnitsSold = g.Sum(x=>x.Quantity), SalesAmount = g.Sum(x=>x.Net) })
+                .OrderByDescending(p => p.UnitsSold).ToList();
+
+            vm.PlatformSummaries = sampleSales.GroupBy(s => s.Platform)
+                .Select(g => new PlatformReportItem{ Platform = g.Key, Orders = g.Select(x=>x.OrderId).Distinct().Count(), UnitsSold = g.Sum(x=>x.Quantity), SalesAmount = g.Sum(x=>x.Net) })
+                .OrderByDescending(p => p.SalesAmount).ToList();
+
+            // supply options for filters
+            ViewBag.AllPlatforms = sampleSales.Select(s => s.Platform).Distinct().OrderBy(x=>x).ToList();
+            ViewBag.AllProducts = sampleSales.Select(s => s.Product).Distinct().OrderBy(x=>x).ToList();
+
+            return View("~/Views/Reports/Index.cshtml", vm);
+        }
+    }
+}

@@ -1,0 +1,122 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Frmework.Models;
+
+namespace Frmework.Repositories
+{
+    // Simple ADO.NET-ready repository. Currently uses in-memory fallback if connection string not present.
+    public class OnlineSalesRepository : IOnlineSalesRepository
+    {
+        private readonly string _conn;
+        private static readonly List<OnlineSale> _inMemory = new List<OnlineSale>();
+
+        public OnlineSalesRepository(IConfiguration configuration)
+        {
+            _conn = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        public IEnumerable<OnlineSale> GetAll()
+        {
+            // If a connection string exists, attempt simple ADO.NET read (placeholder query)
+            if (!string.IsNullOrWhiteSpace(_conn))
+            {
+                var list = new List<OnlineSale>();
+                try
+                {
+                    using(var conn = new SqlConnection(_conn))
+                    using(var cmd = conn.CreateCommand())
+                    {
+                        conn.Open();
+                        // NOTE: replace with stored procedure or proper query mapping
+                        cmd.CommandText = "SELECT TOP 100 SellerPlatform, OrderId, OrderDate, CustomerName, ProductName, SKU, Quantity, MRP, SellingPrice, Discount, PlatformCharges, ShippingCharges, GST, NetSaleAmount, PaymentStatus, OrderStatus, ReturnStatus, SettlementAmount, SettlementDate, Remarks FROM OnlineSales";
+                        cmd.CommandType = CommandType.Text;
+                        using(var rdr = cmd.ExecuteReader())
+                        {
+                            while(rdr.Read())
+                            {
+                                var s = new OnlineSale{
+                                    SellerPlatform = rdr.GetString(0),
+                                    OrderId = rdr.GetString(1),
+                                    OrderDate = rdr.GetDateTime(2),
+                                    CustomerName = rdr.IsDBNull(3) ? null : rdr.GetString(3),
+                                    ProductName = rdr.IsDBNull(4) ? null : rdr.GetString(4),
+                                    SKU = rdr.IsDBNull(5) ? null : rdr.GetString(5),
+                                    Quantity = rdr.GetInt32(6),
+                                    MRP = rdr.GetDecimal(7),
+                                    SellingPrice = rdr.GetDecimal(8),
+                                    Discount = rdr.GetDecimal(9),
+                                    PlatformCharges = rdr.GetDecimal(10),
+                                    ShippingCharges = rdr.GetDecimal(11),
+                                    GST = rdr.GetDecimal(12),
+                                    NetSaleAmount = rdr.GetDecimal(13),
+                                    PaymentStatus = rdr.IsDBNull(14) ? null : rdr.GetString(14),
+                                    OrderStatus = rdr.IsDBNull(15) ? null : rdr.GetString(15),
+                                    ReturnStatus = rdr.IsDBNull(16) ? null : rdr.GetString(16),
+                                    SettlementAmount = rdr.IsDBNull(17) ? 0 : rdr.GetDecimal(17),
+                                    SettlementDate = rdr.IsDBNull(18) ? (DateTime?)null : rdr.GetDateTime(18),
+                                    Remarks = rdr.IsDBNull(19) ? null : rdr.GetString(19)
+                                };
+                                list.Add(s);
+                            }
+                        }
+                    }
+                    return list;
+                }
+                catch
+                {
+                    // fall back to in-memory
+                }
+            }
+
+            return _inMemory;
+        }
+
+        public void Add(OnlineSale sale)
+        {
+            // If DB available, perform insert (placeholder)
+            if (!string.IsNullOrWhiteSpace(_conn))
+            {
+                try
+                {
+                    using(var conn = new SqlConnection(_conn))
+                    using(var cmd = conn.CreateCommand())
+                    {
+                        conn.Open();
+                        cmd.CommandText = "INSERT INTO OnlineSales (SellerPlatform, OrderId, OrderDate, CustomerName, ProductName, SKU, Quantity, MRP, SellingPrice, Discount, PlatformCharges, ShippingCharges, GST, NetSaleAmount, PaymentStatus, OrderStatus, ReturnStatus, SettlementAmount, SettlementDate, Remarks) VALUES (@plat,@oid,@odate,@cust,@prod,@sku,@qty,@mrp,@sp,@disc,@pc,@ship,@gst,@net,@pay,@ord,@ret,@sett,@sdate,@rmk)";
+                        cmd.Parameters.AddWithValue("@plat", sale.SellerPlatform ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@oid", sale.OrderId ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@odate", sale.OrderDate);
+                        cmd.Parameters.AddWithValue("@cust", sale.CustomerName ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@prod", sale.ProductName ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@sku", sale.SKU ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@qty", sale.Quantity);
+                        cmd.Parameters.AddWithValue("@mrp", sale.MRP);
+                        cmd.Parameters.AddWithValue("@sp", sale.SellingPrice);
+                        cmd.Parameters.AddWithValue("@disc", sale.Discount);
+                        cmd.Parameters.AddWithValue("@pc", sale.PlatformCharges);
+                        cmd.Parameters.AddWithValue("@ship", sale.ShippingCharges);
+                        cmd.Parameters.AddWithValue("@gst", sale.GST);
+                        cmd.Parameters.AddWithValue("@net", sale.NetSaleAmount);
+                        cmd.Parameters.AddWithValue("@pay", sale.PaymentStatus ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@ord", sale.OrderStatus ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@ret", sale.ReturnStatus ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@sett", sale.SettlementAmount);
+                        cmd.Parameters.AddWithValue("@sdate", sale.SettlementDate ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@rmk", sale.Remarks ?? (object)DBNull.Value);
+                        cmd.ExecuteNonQuery();
+                    }
+                    return;
+                }
+                catch
+                {
+                    // fall back to in-memory
+                }
+            }
+
+            _inMemory.Add(sale);
+        }
+    }
+}

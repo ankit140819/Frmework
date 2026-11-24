@@ -1,0 +1,14 @@
+﻿@model InventoryModelMvc.Models.DashboardInventoryModel
+@{
+    ViewData["Title"] = "Product Inventory";
+}
+
+<div class="app-shell">
+    <partial name="_DashboardSidebar" />
+    <div class="main">
+        <section class="content">
+            <h1>Product Inventory</h1>
+            <p>Total stock: <strong>@(Model?.TotalStock ?? 0)</strong></p>
+        </section>
+    </div>
+</div>

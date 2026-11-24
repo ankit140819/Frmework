@@ -1,0 +1,70 @@
+﻿@model List<Frmework.Models.CartItem>
+<div class="container mt-2">
+    <div class="row">
+        <div class="col-lg-8 shadow-sm bg-light border border-white border-4">
+            <div class="d-flex align-items-center justify-content-between border-bottom mb-1 pt-2">
+                <div id="MainContent_Div1" class="txtheading">
+                    <p class="m-2 text-color"><strong>OrderId: </strong> #<span id="MainContent_OrderId" class="fs-6 text-color">20260407297</span></p>
+                    <p class="m-2 text-color"><strong>Order Date: </strong> <span id="MainContent_OrderDate" class="fs-6 text-color">Apr 07, 2026</span> </p>
+                </div>
+                <div>Order Subtotal <span id="MainContent_lblgrandtotal" class="form-labelead fw-bold">₹959.00</span></div>
+            </div>
+            <div class="add">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="location">
+                        <i class="fa-solid fa-location-dot"></i>Location
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="shadow-sm bg-light border p-4 border-white border border-4 rounded-4">
+                <h5 class="summary-title fs-5 my-4"><i class="fa-solid fa-bag-shopping"></i>Your Order Summary</h5>
+                <div class="summary-row d-flex align-items-center justify-content-between mt-3">
+                    <div>Subtotal</div>
+                    <div class="fw-bold mt-1"><span id="MainContent_txtSubtotal" class="form-label">₹959.00</span></div>
+                </div>
+                <div class="summary-row  d-flex align-items-center justify-content-between">
+                    <div>Shipping</div>
+                    <div class="text-success fw-bold mt-1">FREE</div>
+                </div>
+                <div class="summary-row  d-flex align-items-center justify-content-between">
+                    <div>Estimated tax <i class="fa-solid fa-info bg-dark text-white small text-center pt-1 rounded-pill" style="width:22px; height:22px;"></i></div>
+                    <div class="fw-bold mt-1">--</div>
+                </div>
+                <hr />
+                <div class="summary-row total d-flex align-items-center justify-content-between">
+                    <div>Estimated Total</div>
+                    <div class="fw-bold mt-1"><span id="MainContent_txtEstimated" class="form-label">₹959.00</span></div>
+                </div>
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitPrice</td>
+                                <td>@item.ProductPrice</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <form method="post" asp-action="PlaceOrder">
+                    <div class="text-center my-4">
+                        <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill shadow-sm fs-6 fw-bold">Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+@page
+@model Frmework.Areas.Admin.Pages.ReportsModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h3>Reports & Analytics</h3>
+    <p class="text-muted">Simple sales chart (last 7 days)</p>
+    <canvas id="salesChart" width="400" height="150"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Model.LabelsJson),
+                datasets: [{
+                    label: 'Sales',
+                    data: @Html.Raw(Model.DataJson),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                }]
+            }
+        });
+    </script>
+</div>

@@ -1,0 +1,70 @@
+﻿@* Shared dashboard sidebar partial *@
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-icon">DB</div>
+        <div>
+            <strong>Admin</strong>
+            <span>Dashboard</span>
+        </div>
+        <button class="collapse-toggle" aria-label="Toggle sidebar" title="Toggle sidebar">☰</button>
+    </div>
+
+    <nav>
+        <a class="nav-item" href="@Url.Action("Index", "Dashboard")"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        <a class="nav-item" href="@Url.Action("ProductInventory", "Dashboard")"><i class="fas fa-boxes"></i><span>Product Inventory</span></a>
+        <a class="nav-item" href="@Url.Action("Index", "OnlineSales")"><i class="fas fa-globe"></i><span>Online Sales</span></a>
+        <a class="nav-item" href="@Url.Action("Index", "OfflineSales")"><i class="fas fa-store"></i><span>Offline Sales</span></a>
+        <a class="nav-item" href="@Url.Action("Index", "Orders")"><i class="fas fa-clipboard-list"></i><span>All Orders</span></a>
+        <a class="nav-item" href="@Url.Action("CustomerInventory", "Dashboard")"><i class="fas fa-users"></i><span>Customer Inventory</span></a>
+        <a class="nav-item" href="@Url.Page("/Addresses", new { area = "Admin" })"><i class="fas fa-map-marker-alt"></i><span>Addresses</span></a>
+        <a class="nav-item" href="@Url.Page("/Reports", new { area = "Admin" })"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="admin-avatar">A</div>
+        <div>
+            <span>Admin</span>
+            <small>manage site</small>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            const sidebar = document.querySelector('.sidebar');
+            const main = document.querySelector('.main');
+            const toggle = document.querySelector('.collapse-toggle');
+
+            if(!sidebar || !main || !toggle) return;
+
+            // initialize from localStorage
+            const collapsed = localStorage.getItem('dashboard.sidebar.collapsed') === '1';
+            if(collapsed){
+                sidebar.classList.add('collapsed');
+                main.classList.add('collapsed');
+            }
+
+            toggle.addEventListener('click', function(e){
+                e.preventDefault();
+                const isCollapsed = sidebar.classList.toggle('collapsed');
+                main.classList.toggle('collapsed');
+                localStorage.setItem('dashboard.sidebar.collapsed', isCollapsed ? '1' : '0');
+            });
+
+            // mark active nav-item based on current path
+            try{
+                const path = location.pathname.toLowerCase();
+                document.querySelectorAll('.sidebar nav a.nav-item').forEach(a=>{
+                    try{
+                        const url = new URL(a.href, location.origin);
+                        const hrefPath = url.pathname.toLowerCase();
+                        if(path === hrefPath || (hrefPath !== '/' && path.indexOf(hrefPath) === 0)){
+                            a.classList.add('active');
+                        } else {
+                            a.classList.remove('active');
+                        }
+                    }catch(_){ }
+                });
+            }catch(_){ }
+        })();
+    </script>
+</aside>

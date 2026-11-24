@@ -1,0 +1,19 @@
+namespace Frmework.Models
+{
+    public class Address
+    {
+        public string Id { get; set; }
+        public string FullName { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string Line1 { get; set; }
+        public string Line2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
+        public string Pincode { get; set; }
+        public bool IsDefault { get; set; }
+
+        public string DisplayAddress => string.Join(", ", new[] { Line1, Line2, City, State, Country, Pincode }.Where(s => !string.IsNullOrWhiteSpace(s)));
+    }
+}

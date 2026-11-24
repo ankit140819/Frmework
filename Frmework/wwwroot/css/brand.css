@@ -1,0 +1,86 @@
+/* Public storefront theme. Dashboard components keep their own styles. */
+:root {
+    --brand-ink: #302b2b;
+    --brand-muted: #806f6c;
+    --brand-rose: #dca9a2;
+    --brand-blush: #f8ece9;
+    --brand-cream: #fcf9f7;
+}
+
+body {
+    background: var(--brand-cream) !important;
+    color: var(--brand-ink);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.announcement-bar {
+    background: #f7e7e3 !important;
+    color: #725b57 !important;
+    font-size: .78rem !important;
+    letter-spacing: .03em;
+    padding: 8px 0 !important;
+}
+
+body > header,
+header {
+    background: rgba(255, 253, 251, .97) !important;
+    border-bottom: 1px solid #eee2df !important;
+    box-shadow: 0 3px 18px rgba(80, 52, 48, .07) !important;
+    animation: none !important;
+}
+
+header .navbar { padding: 14px 0 !important; }
+header .navbar-brand { color: var(--brand-ink) !important; gap: 10px; }
+header .logo-container {
+    width: 38px;
+    height: 38px;
+    background: var(--brand-blush) !important;
+    border: 1px solid #edd8d4 !important;
+    border-radius: 50%;
+    box-shadow: none !important;
+}
+header .logo-container img { filter: none !important; }
+header .brand-text .main,
+header .brand-text .tagline {
+    background: none !important;
+    color: var(--brand-ink) !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+header .brand-text .main { display: block; font-size: 1.08rem; letter-spacing: .08em; }
+header .brand-text .tagline { color: var(--brand-muted) !important; font-size: .55rem; }
+header .navbar-nav .nav-link,
+header .navbar-dark .navbar-nav .nav-link {
+    color: #625553 !important;
+    font-size: .88rem;
+    font-weight: 500;
+}
+header .navbar-nav .nav-link:hover { color: #b2756d !important; }
+header .navbar-nav .nav-link::after { background: var(--brand-rose) !important; box-shadow: none !important; }
+header .cart-button {
+    background: transparent !important;
+    border: 1px solid #e6d5d1 !important;
+    color: #625553 !important;
+    box-shadow: none !important;
+}
+header .cart-button:hover { background: var(--brand-blush) !important; color: var(--brand-ink) !important; }
+header .navbar-toggler { border-color: #d9c7c3 !important; }
+header .navbar-toggler-icon { filter: invert(35%); }
+
+main[role="main"] { padding-bottom: 0; }
+footer {
+    background: #302c2e !important;
+    border-top: 0 !important;
+    color: #eee5e2 !important;
+    padding: 48px 0 22px !important;
+}
+footer h5 { color: #fff8f5; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
+footer p, footer li { color: #cdbfbb; font-size: .78rem; line-height: 1.7; }
+footer a, footer a.text-white { color: #e8c1ba !important; }
+footer a:hover { color: #fff !important; text-decoration: none !important; }
+
+@media (max-width: 991.98px) {
+    header .navbar-collapse { background: #fffdfb; padding: 12px; border-top: 1px solid #eee2df; }
+    header .navbar-search { align-items: stretch; }
+}

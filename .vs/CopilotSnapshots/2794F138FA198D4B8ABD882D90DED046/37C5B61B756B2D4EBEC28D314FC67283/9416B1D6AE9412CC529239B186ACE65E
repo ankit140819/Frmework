@@ -1,0 +1,135 @@
+﻿using Frmework.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace Frmework.Controllers
+{
+    public class CheckoutController : Controller
+    {
+        private readonly IConfiguration _configuration;
+
+        public CheckoutController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public IActionResult Checkout()
+        {
+            var customerId = HttpContext.Session.GetString("CustId");
+
+            if (string.IsNullOrEmpty(customerId))
+            {
+                // redirect to login and return back to Checkout after successful login
+                return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("Checkout", "Checkout") });
+            }
+
+            var cartJson = HttpContext.Session.GetString("Cart");
+
+            if (string.IsNullOrEmpty(cartJson))
+            {
+                return RedirectToAction("Cart", "Home");
+            }
+
+            var cart = JsonConvert.DeserializeObject<List<CartItem>>(cartJson);
+
+            var totalQuantity = cart.Sum(x => x.Quantity);
+            var totalAmount = cart.Sum(x => x.Quantity * x.ProductPrice);
+
+            string orderId = Guid.NewGuid().ToString();
+
+            InsertOrderMaster(orderId, customerId, HttpContext.Session.Id, totalQuantity.ToString(), totalAmount.ToString());
+
+            foreach (var item in cart)
+            {
+                InsertOrderDetails(orderId, customerId, item.ProductId.ToString(), item.ProductName, item.Quantity.ToString(), item.ProductPrice.ToString(), "", (item.Quantity * item.ProductPrice).ToString(), HttpContext.Session.Id);
+            }
+
+            return RedirectToAction("Shipping", "Checkout", new { orderId = orderId });
+        }
+
+        public string GetOrderId()
+        {
+            string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            string todayDate = DateTime.Now.ToString("yyyyMMdd");
+            string orderId = "";
+
+            using (SqlConnection con = new SqlConnection(conStr))
+            {
+                using (SqlCommand cmd = new SqlCommand("SP_YouthCustomaticOrder", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Flag", "3");
+
+                    con.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() && reader["MaxOrderId"] != DBNull.Value)
+                        {
+                            int maxId = Convert.ToInt32(reader["MaxOrderId"]);
+                            orderId = todayDate + (maxId + 1).ToString();
+                        }
+                        else
+                        {
+                            orderId = todayDate + "1";
+                        }
+                    }
+                }
+            }
+
+            return orderId;
+        }
+
+        public void InsertOrderMaster(string orderId, string customerId, string sessionId, string totalQty, string totalAmt)
+        {
+            string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            using (SqlConnection con = new SqlConnection(conStr))
+
+            using (SqlCommand cmd = new SqlCommand("SP_YouthCustomaticOrder", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Flag", "1");
+                cmd.Parameters.AddWithValue("@Order_Id", orderId);
+                cmd.Parameters.AddWithValue("@Order_Date", DateTime.Now);
+                cmd.Parameters.AddWithValue("@Customer_Id", customerId);
+                cmd.Parameters.AddWithValue("@Total_Qty", totalQty);
+                cmd.Parameters.AddWithValue("@Total_Amount", totalAmt);
+                cmd.Parameters.AddWithValue("@User_SessionId", sessionId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void InsertOrderDetails(string orderId, string customerId, string itemCode, string itemName, string quantity, string rate, string discount,string totalAmount, string sessionId)
+        {
+            string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            using (SqlConnection con = new SqlConnection(conStr))
+
+            using (SqlCommand cmd = new SqlCommand("SP_YouthCustomaticOrder", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Flag", "2");
+                cmd.Parameters.AddWithValue("@Order_Id", orderId);
+                cmd.Parameters.AddWithValue("@Customer_Id", customerId);
+                cmd.Parameters.AddWithValue("@Item_code", itemCode);
+                cmd.Parameters.AddWithValue("@Item_Name", itemName);
+                cmd.Parameters.AddWithValue("@Quantity", quantity);
+                cmd.Parameters.AddWithValue("@Rate", rate);
+                cmd.Parameters.AddWithValue("@Discount", discount);
+                cmd.Parameters.AddWithValue("@ToTal_Amount", totalAmount);
+                cmd.Parameters.AddWithValue("@User_SessionID", sessionId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+}

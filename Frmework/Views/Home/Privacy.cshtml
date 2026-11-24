@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<link rel="stylesheet" href="~/css/privacy.css" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+<div class="privacy-page">
+    <section class="privacy-hero py-5">
+        <div class="container py-lg-4">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-8">
+                    <div class="privacy-eyebrow"><i class="fa-solid fa-shield-halved"></i> Your trust matters</div>
+                    <h1>Privacy, with clarity.</h1>
+                    <p class="lead mb-4">Your privacy matters to us. Learn what information we collect, how we use it, and the choices you have at GlowSkin.</p>
+                    <a asp-controller="Home" asp-action="Contact" class="btn btn-primary px-4 py-2"><i class="fa-regular fa-envelope me-2"></i>Contact Privacy Team</a>
+                </div>
+                <div class="col-lg-4 text-lg-end text-center">
+                    <div class="privacy-hero-icon"><i class="fa-solid fa-lock"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container my-5">
+        <div class="row g-4 align-items-start">
+            <main class="col-lg-8">
+                <div class="privacy-content">
+                    <div class="policy-section">
+                        <div class="policy-heading"><span class="policy-number">01</span><h4>Information We Collect</h4></div>
+                        <p>We collect information to provide better services to all our users. Types of data we collect include:</p>
+                        <ul><li><strong>Account information:</strong> name, email, and contact details you provide when registering or ordering.</li><li><strong>Transactional data:</strong> order history, billing, and shipping addresses.</li><li><strong>Device &amp; usage data:</strong> IP address, browser type, pages visited, and interaction events for analytics and performance.</li><li><strong>Cookies &amp; local storage:</strong> cookies to remember preferences and improve site experience.</li></ul>
+                    </div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number">02</span><h4>How We Use Your Data</h4></div><p>We use collected data for the following purposes:</p><ul><li>Process and fulfill orders, including payment and delivery.</li><li>Provide customer support and respond to inquiries.</li><li>Personalize content, product recommendations and marketing (with your consent where required).</li><li>Conduct analytics to improve our website and detect fraud or abuse.</li></ul></div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number">03</span><h4>Cookies &amp; Tracking</h4></div><p>We use cookies and similar technologies. You can control cookie settings in your browser. We may also use third-party services (analytics and advertising) which set their own cookies.</p></div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number">04</span><h4>Third-Party Services</h4></div><p>We may share data with service providers that perform services on our behalf (payment processors, shipping partners, analytics). We only share what is necessary and require partners to adhere to data protection standards.</p></div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number">05</span><h4>Your Rights</h4></div><p>Depending on your jurisdiction, you may have rights to access, correct, export, or delete your personal data. To exercise these rights, contact us at <a href="mailto:privacy@glowskin.example">privacy@glowskin.example</a>.</p></div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number">06</span><h4>Data Retention &amp; Security</h4></div><p>We retain personal data only as long as necessary. We implement administrative, technical, and physical safeguards to protect your information. No method of transmission over the internet is 100% secure; we continuously work to improve security.</p></div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number">07</span><h4>Children's Privacy</h4></div><p>Our services are not intended for children under the age of 13. We do not knowingly collect personal information from children under 13.</p></div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number">08</span><h4>Changes to this Policy</h4></div><p>We may update this policy. We will post changes here with an updated “Effective Date”. Continued use of the site after changes means you accept the updated policy.</p></div>
+                    <div class="policy-section"><div class="policy-heading"><span class="policy-number"><i class="fa-regular fa-calendar"></i></span><h4>Effective Date</h4></div><p class="effective-date mb-0"><i class="fa-solid fa-check"></i> This policy is effective as of: <strong>@DateTime.UtcNow.ToString("yyyy-MM-dd")</strong></p></div>
+                </div>
+                <div class="privacy-actions"><a class="btn btn-outline-secondary" href="@Url.Action("Privacy", "Home")"><i class="fa-solid fa-download me-2"></i>Download PDF</a><a class="btn btn-outline-secondary" href="@Url.Action("Contact", "Home")"><i class="fa-regular fa-comments me-2"></i>Contact Support</a><a class="btn btn-outline-secondary" href="@Url.Action("Products", "Home")"><i class="fa-solid fa-bag-shopping me-2"></i>Shop Safely</a></div>
+            </main>
+            <aside class="col-lg-4">
+                <div class="privacy-controls"><h5><i class="fa-solid fa-sliders"></i> Privacy Controls</h5><p>Manage your privacy preferences and data access requests with our support team.</p><div class="d-grid gap-2"><a class="btn btn-primary" href="mailto:privacy@glowskin.example"><i class="fa-solid fa-file-export me-2"></i>Request Data Export</a><a class="btn btn-outline-secondary" href="mailto:privacy@glowskin.example"><i class="fa-regular fa-trash-can me-2"></i>Request Deletion</a></div></div>
+                <div class="security-card"><h6><i class="fa-solid fa-circle-check"></i> Security Tips</h6><ul><li>Use a strong, unique password for your account.</li><li>Enable two-factor authentication where available.</li><li>Never share your password or OTP with anyone.</li></ul></div>
+            </aside>
+        </div>
+    </div>
+</div>

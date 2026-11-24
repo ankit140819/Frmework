@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<section class="py-5" style="background: linear-gradient(180deg, rgba(102,126,234,0.06), rgba(118,75,162,0.04));">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">Privacy Policy</h1>
+                <p class="lead text-muted">Your privacy matters to us. This page explains what information we collect, how we use it, and the choices you have.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a asp-controller="Home" asp-action="Contact" class="btn btn-outline-primary rounded-pill">Contact Privacy Team</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4">
+                <h4 class="fw-bold">1. Information We Collect</h4>
+                <p class="text-muted">We collect information to provide better services to all our users. Types of data we collect include:</p>
+                <ul>
+                    <li><strong>Account information:</strong> name, email, and contact details you provide when registering or ordering.</li>
+                    <li><strong>Transactional data:</strong> order history, billing, and shipping addresses.</li>
+                    <li><strong>Device & usage data:</strong> IP address, browser type, pages visited, and interaction events for analytics and performance.</li>
+                    <li><strong>Cookies & local storage:</strong> cookies to remember preferences and improve site experience.</li>
+                </ul>
+
+                <h4 class="fw-bold mt-4">2. How We Use Your Data</h4>
+                <p class="text-muted">We use collected data for the following purposes:</p>
+                <ul>
+                    <li>Process and fulfill orders, including payment and delivery.</li>
+                    <li>Provide customer support and respond to inquiries.</li>
+                    <li>Personalize content, product recommendations and marketing (with your consent where required).</li>
+                    <li>Conduct analytics to improve our website and detect fraud or abuse.</li>
+                </ul>
+
+                <h4 class="fw-bold mt-4">3. Cookies & Tracking</h4>
+                <p class="text-muted">We use cookies and similar technologies. You can control cookie settings in your browser. We may also use third-party services (analytics and advertising) which set their own cookies.</p>
+
+                <h4 class="fw-bold mt-4">4. Third-Party Services</h4>
+                <p class="text-muted">We may share data with service providers that perform services on our behalf (payment processors, shipping partners, analytics). We only share what is necessary and require partners to adhere to data protection standards.</p>
+
+                <h4 class="fw-bold mt-4">5. Your Rights</h4>
+                <p class="text-muted">Depending on your jurisdiction, you may have rights to access, correct, export, or delete your personal data. To exercise these rights, contact us at <a href="mailto:privacy@glowskin.example">privacy@glowskin.example</a>.</p>
+
+                <h4 class="fw-bold mt-4">6. Data Retention & Security</h4>
+                <p class="text-muted">We retain personal data only as long as necessary. We implement administrative, technical, and physical safeguards to protect your information. No method of transmission over the internet is 100% secure; we continuously work to improve security.</p>
+
+                <h4 class="fw-bold mt-4">7. Children's Privacy</h4>
+                <p class="text-muted">Our services are not intended for children under the age of 13. We do not knowingly collect personal information from children under 13.</p>
+
+                <h4 class="fw-bold mt-4">8. Changes to this Policy</h4>
+                <p class="text-muted">We may update this policy. We will post changes here with an updated "Effective Date". Continued use of the site after changes means you accept the updated policy.</p>
+
+                <h4 class="fw-bold mt-4">Effective Date</h4>
+                <p class="text-muted">This policy is effective as of: <strong>@DateTime.UtcNow.ToString("yyyy-MM-dd")</strong></p>
+            </div>
+
+            <!-- Helpful Links -->
+            <div class="d-flex gap-3 mt-4 flex-wrap">
+                <a class="btn btn-outline-secondary" href="@Url.Action("Privacy", "Home")">Download PDF</a>
+                <a class="btn btn-outline-secondary" href="@Url.Action("Contact", "Home")">Contact Support</a>
+                <a class="btn btn-outline-secondary" href="@Url.Action("Products", "Home")">Shop Safely</a>
+            </div>
+        </div>
+
+        <aside class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-bold">Privacy Controls</h5>
+                <p class="text-muted">Manage your privacy preferences and data access requests.</p>
+                <div class="d-grid gap-2">
+                    <a class="btn btn-primary" href="mailto:privacy@glowskin.example">Request Data Export</a>
+                    <a class="btn btn-outline-secondary" href="mailto:privacy@glowskin.example">Request Deletion</a>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4 mt-4">
+                <h6 class="fw-bold">Security Tips</h6>
+                <ul class="text-muted">
+                    <li>Use a strong, unique password for your account.</li>
+                    <li>Enable two-factor authentication where available.</li>
+                    <li>Never share your password or OTP with anyone.</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<style>
+</style>

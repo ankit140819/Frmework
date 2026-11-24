@@ -1,0 +1,254 @@
+﻿using Frmework.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Diagnostics;
+using Newtonsoft.Json;
+
+
+namespace Frmework.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly IConfiguration _configuration;
+
+        public HomeController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        // New: Products listing with search and basic filters
+        public IActionResult Products(string q, decimal? minPrice, decimal? maxPrice, string sort)
+        {
+            string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            List<Youth> products = new List<Youth>();
+
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("SP_Products_Master", con))
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@flag", "select");
+
+                con.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        products.Add(new Youth
+                        {
+                            Product_Id = dr["Product_Id"].ToString(),
+                            Product_Name = dr["Product_Name"].ToString(),
+                            Product_Amount = Convert.ToDecimal(dr["Product_Amount"]),
+                            Short_Description = dr["Short_Description"].ToString(),
+                            Full_Description = dr["Full_Description"].ToString()
+                        });
+                    }
+                }
+            }
+
+            // Apply search
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                products = products.Where(p => p.Product_Name?.Contains(q, StringComparison.OrdinalIgnoreCase) == true || p.Short_Description?.Contains(q, StringComparison.OrdinalIgnoreCase) == true).ToList();
+                ViewBag.SearchQuery = q;
+            }
+
+            // Apply price filters
+            if (minPrice.HasValue)
+                products = products.Where(p => p.Product_Amount >= minPrice.Value).ToList();
+            if (maxPrice.HasValue)
+                products = products.Where(p => p.Product_Amount <= maxPrice.Value).ToList();
+
+            // Sorting
+            ViewBag.Sort = sort;
+            products = sort switch
+            {
+                "price_asc" => products.OrderBy(p => p.Product_Amount).ToList(),
+                "price_desc" => products.OrderByDescending(p => p.Product_Amount).ToList(),
+                _ => products
+            };
+
+            return View(products);
+        }
+
+        public IActionResult Index() 
+        {
+            string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            List<Youth> products = new List<Youth>();
+
+            using (SqlConnection con = new SqlConnection(conStr))
+
+            using (SqlCommand cmd = new SqlCommand("SP_Products_Master", con))
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@flag", "select");
+
+                con.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        products.Add(new Youth
+                        {
+                            Product_Id = dr["Product_Id"].ToString(),
+                            Product_Name = dr["Product_Name"].ToString(),
+                            Product_Amount = Convert.ToDecimal(dr["Product_Amount"]),
+                            Short_Description = dr["Short_Description"].ToString(),
+                            Full_Description = dr["Full_Description"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return View(products);
+        }
+
+        public IActionResult Product_Details(string id)
+        {
+            string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            Youth product = null;
+
+            List<Youth> products = new List<Youth>();
+
+            using (SqlConnection con = new SqlConnection(conStr))
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("SP_Products_Master", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@flag", SqlDbType.VarChar).Value = "Product_Details";
+                    cmd.Parameters.Add("@Product_Id", SqlDbType.VarChar).Value = id;
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            product = new Youth
+                            {
+                                Product_Id = dr["Product_Id"].ToString(),
+                                Product_Name = dr["Product_Name"].ToString(),
+                                Product_Amount = Convert.ToDecimal(dr["Product_Amount"]),
+                                Short_Description = dr["Short_Description"].ToString(),
+                                Full_Description = dr["Full_Description"].ToString()
+                            };
+                        }
+                    }
+                }
+
+                if (product == null)
+                {
+                    return NotFound();  
+                }
+
+                using (SqlCommand cmd = new SqlCommand("SP_Products_Master", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@flag", SqlDbType.VarChar).Value = "select";
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            products.Add(new Youth
+                            {
+                                Product_Id = dr["Product_Id"].ToString(),
+                                Product_Name = dr["Product_Name"].ToString(),
+                                Product_Amount = Convert.ToDecimal(dr["Product_Amount"]),
+                                Short_Description = dr["Short_Description"].ToString(),
+                                Full_Description = dr["Full_Description"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            ViewBag.RelatedProducts = products;
+
+            return View(product);
+        }
+
+        
+public IActionResult AddToCart(string Product_Id, string productName, int selectedQty, decimal selectedTotalPrice, string returnTo = null)
+{
+        decimal unitPrice = selectedTotalPrice / selectedQty;
+
+        List<CartItem> cart;
+
+        var sessionCart = HttpContext.Session.GetString("Cart");
+
+        if (sessionCart != null)
+
+            cart = JsonConvert.DeserializeObject<List<CartItem>>(sessionCart);
+
+        else
+            cart = new List<CartItem>();
+
+        var existingItem = cart.FirstOrDefault(x => x.ProductId == Product_Id);
+
+        if (existingItem != null)
+        {
+            existingItem.Quantity = selectedQty;
+            existingItem.UnitPrice = unitPrice;
+            existingItem.ProductPrice = unitPrice * selectedQty;
+        }
+        else 
+        {
+            cart.Add(new CartItem
+            {
+                ProductId = Product_Id,
+                ProductName = productName,
+                UnitPrice = unitPrice,
+                Quantity = selectedQty,
+                ProductPrice = selectedTotalPrice
+            });
+        }
+
+        HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+
+        // If caller requested immediate checkout, redirect there
+        if (!string.IsNullOrEmpty(returnTo) && returnTo.ToLower() == "checkout")
+        {
+            return RedirectToAction("Checkout", "Checkout");
+        }
+
+        return RedirectToAction("Product_Details", new { id = Product_Id });
+
+        }
+
+        public IActionResult RemoveFromCart(string id)
+        {
+            var sessionCart = HttpContext.Session.GetString("Cart");
+
+            if (sessionCart != null)
+            {
+                var cart = JsonConvert.DeserializeObject<List<CartItem>>(sessionCart);
+                var item = cart.FirstOrDefault(x => x.ProductId == id);
+
+                if (item != null)
+                    cart.Remove(item);
+
+                HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+            }
+
+            return RedirectToAction("Index"); 
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}

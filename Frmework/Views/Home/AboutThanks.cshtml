@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Thank you";
+}
+
+<div class="container my-5">
+    <div class="alert alert-success">
+        <h4 class="alert-heading">Thanks!</h4>
+        <p>@TempData["NewsletterResult"]</p>
+        <hr />
+        <a asp-controller="Home" asp-action="About" class="btn btn-primary">Back to About</a>
+    </div>
+</div>

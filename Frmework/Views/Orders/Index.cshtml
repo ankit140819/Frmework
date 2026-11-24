@@ -1,0 +1,115 @@
+@model List<Frmework.Models.OrderViewModel>
+@{
+    ViewData["Title"] = "All Orders";
+}
+
+<style>
+    footer{display:none;}
+</style>
+<div class="app-shell">
+    <partial name="_DashboardSidebar" />
+    <div class="main">
+        <section class="content">
+
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">All Orders</h3>
+        <div>
+            <a class="btn btn-outline-secondary ms-2" href="#"><i class="fas fa-file-export"></i> Export</a>
+        </div>
+    </div>
+
+    <div class="card mb-3 p-3">
+        <form class="row g-2" method="get">
+            <div class="col-md-3"><input type="text" name="q" class="form-control" placeholder="Search order id or product"/></div>
+            <div class="col-md-2">
+                <select name="source" class="form-select">
+                    <option>All</option>
+                    <option>Amazon</option>
+                    <option>Flipkart</option>
+                    <option>Meesho</option>
+                    <option>MyStore</option>
+                    <option>Distacart</option>
+                    <option>23UForever Website</option>
+                    <option>Offline</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="orderStatus" class="form-select">
+                    <option>All</option>
+                    <option>Processing</option>
+                    <option>Shipped</option>
+                    <option>Delivered</option>
+                    <option>Cancelled</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="paymentStatus" class="form-select">
+                    <option>All</option>
+                    <option>Paid</option>
+                    <option>Pending</option>
+                </select>
+            </div>
+            <div class="col-md-2 text-end"><button class="btn btn-primary">Filter</button></div>
+        </form>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Source</th>
+                        <th>Type</th>
+                        <th>Order Date</th>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Qty</th>
+                        <th>MRP</th>
+                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>Platform Fee</th>
+                        <th>Shipping</th>
+                        <th>GST</th>
+                        <th>Net</th>
+                        <th>Payment</th>
+                        <th>Order</th>
+                        <th>Return</th>
+                        <th>Settlement</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var o in Model)
+                    {
+                        <tr>
+                            <td>@o.OrderId</td>
+                            <td>@o.Source</td>
+                            <td>@o.Type</td>
+                            <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
+                            <td>@o.ProductName</td>
+                            <td>@o.SKU</td>
+                            <td>@o.Quantity</td>
+                            <td>₹@o.MRP.ToString("F2")</td>
+                            <td>₹@o.Price.ToString("F2")</td>
+                            <td>₹@o.Discount.ToString("F2")</td>
+                            <td>₹@o.PlatformCharges.ToString("F2")</td>
+                            <td>₹@o.ShippingCharges.ToString("F2")</td>
+                            <td>₹@o.GST.ToString("F2")</td>
+                            <td>₹@o.NetAmount.ToString("F2")</td>
+                            <td>@(o.PaymentStatus=="Paid"? "Paid" : "Pending")</td>
+                            <td>@o.OrderStatus</td>
+                            <td>@o.ReturnStatus</td>
+                            <td>₹@o.SettlementAmount.ToString("F2")</td>
+                            <td>@o.Remarks</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</section>
+        </div>
+        </div>
