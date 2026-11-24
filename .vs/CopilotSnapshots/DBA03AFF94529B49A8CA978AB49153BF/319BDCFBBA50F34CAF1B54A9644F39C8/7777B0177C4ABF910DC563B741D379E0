@@ -1,5 +1,0 @@
-﻿@* Backup of original Home/Index.cshtml before applying new home design *@
-@model List<Frmework.Models.Youth>
-@{ ViewData["Title"] = "Home - Premium Skincare Solutions"; }
-@* Original content preserved here for rollback if needed. *@
-@Html.Raw(System.IO.File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\Views\\Home\\Index.cshtml")))

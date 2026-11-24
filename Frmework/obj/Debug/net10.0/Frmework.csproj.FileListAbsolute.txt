@@ -238,4 +238,4 @@ D:\Frmework\Frmework\obj\Debug\net10.0\compressed\ei1yx2qm60-{0}-cuovw6hslf-cuov
 D:\Frmework\Frmework\obj\Debug\net10.0\compressed\d0qhplsbll-{0}-fiaznjvvh2-fiaznjvvh2.gz
 D:\Frmework\Frmework\obj\Debug\net10.0\compressed\jmpjflx5ju-{0}-j84cux5ti6-j84cux5ti6.gz
 D:\Frmework\Frmework\obj\Debug\net10.0\compressed\aljhmxl024-{0}-7ipees9isq-7ipees9isq.gz
-D:\Frmework\Frmework\obj\Debug\net10.0\compressed\t60mazgl8w-{0}-wuh5dan5ya-wuh5dan5ya.gz
+D:\Frmework\Frmework\obj\Debug\net10.0\compressed\t60mazgl8w-{0}-1ao4y6lkqc-1ao4y6lkqc.gz

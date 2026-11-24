@@ -1,0 +1,15 @@
+# Visual Studio files
+.vs/
+[Bb]in/
+[Oo]bj/
+
+# Build files
+Debug/
+Release/
+
+# User-specific files
+*.user
+*.suo
+
+# NuGet
+packages/
